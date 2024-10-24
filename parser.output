@@ -1,0 +1,1011 @@
+   0  $accept : %entry% $end
+
+   1  program : INT DIMENSIONS OF config END opt_statements EOF
+
+   2  config : INT DOT_DOT INT
+   3         | fields
+
+   4  fields : field
+   5         | fields COMMA field
+
+   6  field : ID OF INT DOT_DOT INT
+
+   7  opt_statements :
+   8                 | statement_list
+
+   9  statement_list : statement
+  10                 | statement_list statement
+
+  11  statement : cell ASSIGN expression
+  12            | ID ASSIGN expression
+  13            | IF cond THEN statement_list elsif_list END
+
+  14  cell : LBRACKET INT COMMA INT RBRACKET
+
+  15  expression : expression PLUS term
+  16             | expression MINUS term
+  17             | term
+
+  18  term : term MULT factor
+  19       | term DIVISION factor
+  20       | term MODULO factor
+  21       | factor
+
+  22  factor : cell
+  23         | INT
+  24         | ID
+  25         | LPARENT expression RPARENT
+  26         | sign
+
+  27  sign : PLUS factor
+  28       | MINUS factor
+
+  29  cond : expression EQ expression
+  30       | expression NEQ expression
+  31       | expression LT expression
+  32       | expression LEQ expression
+  33       | expression GT expression
+  34       | expression GEQ expression
+
+  35  elsif_list : ELSIF cond THEN statement_list elsif_list
+  36             | ELSE statement_list
+  37             |
+
+  38  %entry% : '\001' program
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . program  (38)
+
+	INT  shift 3
+	.  error
+
+	program  goto 4
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	program : INT . DIMENSIONS OF config END opt_statements EOF  (1)
+
+	DIMENSIONS  shift 5
+	.  error
+
+
+state 4
+	%entry% : '\001' program .  (38)
+
+	.  reduce 38
+
+
+state 5
+	program : INT DIMENSIONS . OF config END opt_statements EOF  (1)
+
+	OF  shift 6
+	.  error
+
+
+state 6
+	program : INT DIMENSIONS OF . config END opt_statements EOF  (1)
+
+	ID  shift 7
+	INT  shift 8
+	.  error
+
+	config  goto 9
+	fields  goto 10
+	field  goto 11
+
+
+state 7
+	field : ID . OF INT DOT_DOT INT  (6)
+
+	OF  shift 12
+	.  error
+
+
+state 8
+	config : INT . DOT_DOT INT  (2)
+
+	DOT_DOT  shift 13
+	.  error
+
+
+state 9
+	program : INT DIMENSIONS OF config . END opt_statements EOF  (1)
+
+	END  shift 14
+	.  error
+
+
+state 10
+	config : fields .  (3)
+	fields : fields . COMMA field  (5)
+
+	COMMA  shift 15
+	END  reduce 3
+
+
+state 11
+	fields : field .  (4)
+
+	.  reduce 4
+
+
+state 12
+	field : ID OF . INT DOT_DOT INT  (6)
+
+	INT  shift 16
+	.  error
+
+
+state 13
+	config : INT DOT_DOT . INT  (2)
+
+	INT  shift 17
+	.  error
+
+
+state 14
+	program : INT DIMENSIONS OF config END . opt_statements EOF  (1)
+	opt_statements : .  (7)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ID  shift 20
+	EOF  reduce 7
+
+	opt_statements  goto 21
+	statement_list  goto 22
+	statement  goto 23
+	cell  goto 24
+
+
+state 15
+	fields : fields COMMA . field  (5)
+
+	ID  shift 7
+	.  error
+
+	field  goto 25
+
+
+state 16
+	field : ID OF INT . DOT_DOT INT  (6)
+
+	DOT_DOT  shift 26
+	.  error
+
+
+state 17
+	config : INT DOT_DOT INT .  (2)
+
+	.  reduce 2
+
+
+state 18
+	cell : LBRACKET . INT COMMA INT RBRACKET  (14)
+
+	INT  shift 27
+	.  error
+
+
+state 19
+	statement : IF . cond THEN statement_list elsif_list END  (13)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 34
+	cond  goto 35
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 20
+	statement : ID . ASSIGN expression  (12)
+
+	ASSIGN  shift 39
+	.  error
+
+
+state 21
+	program : INT DIMENSIONS OF config END opt_statements . EOF  (1)
+
+	EOF  shift 40
+	.  error
+
+
+state 22
+	opt_statements : statement_list .  (8)
+	statement_list : statement_list . statement  (10)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ID  shift 20
+	EOF  reduce 8
+
+	statement  goto 41
+	cell  goto 24
+
+
+state 23
+	statement_list : statement .  (9)
+
+	.  reduce 9
+
+
+state 24
+	statement : cell . ASSIGN expression  (11)
+
+	ASSIGN  shift 42
+	.  error
+
+
+state 25
+	fields : fields COMMA field .  (5)
+
+	.  reduce 5
+
+
+state 26
+	field : ID OF INT DOT_DOT . INT  (6)
+
+	INT  shift 43
+	.  error
+
+
+state 27
+	cell : LBRACKET INT . COMMA INT RBRACKET  (14)
+
+	COMMA  shift 44
+	.  error
+
+
+state 28
+	factor : LPARENT . expression RPARENT  (25)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 45
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 29
+	sign : PLUS . factor  (27)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	factor  goto 46
+	sign  goto 38
+
+
+state 30
+	sign : MINUS . factor  (28)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	factor  goto 47
+	sign  goto 38
+
+
+state 31
+	factor : ID .  (24)
+
+	.  reduce 24
+
+
+state 32
+	factor : INT .  (23)
+
+	.  reduce 23
+
+
+state 33
+	factor : cell .  (22)
+
+	.  reduce 22
+
+
+state 34
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression . EQ expression  (29)
+	cond : expression . NEQ expression  (30)
+	cond : expression . LT expression  (31)
+	cond : expression . LEQ expression  (32)
+	cond : expression . GT expression  (33)
+	cond : expression . GEQ expression  (34)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	EQ  shift 50
+	NEQ  shift 51
+	LT  shift 52
+	LEQ  shift 53
+	GT  shift 54
+	GEQ  shift 55
+	.  error
+
+
+state 35
+	statement : IF cond . THEN statement_list elsif_list END  (13)
+
+	THEN  shift 56
+	.  error
+
+
+state 36
+	expression : term .  (17)
+	term : term . MULT factor  (18)
+	term : term . DIVISION factor  (19)
+	term : term . MODULO factor  (20)
+
+	DIVISION  shift 57
+	MODULO  shift 58
+	MULT  shift 59
+	EOF  reduce 17
+	END  reduce 17
+	LBRACKET  reduce 17
+	RPARENT  reduce 17
+	PLUS  reduce 17
+	MINUS  reduce 17
+	IF  reduce 17
+	THEN  reduce 17
+	ELSE  reduce 17
+	ELSIF  reduce 17
+	EQ  reduce 17
+	NEQ  reduce 17
+	LT  reduce 17
+	LEQ  reduce 17
+	GT  reduce 17
+	GEQ  reduce 17
+	ID  reduce 17
+
+
+state 37
+	term : factor .  (21)
+
+	.  reduce 21
+
+
+state 38
+	factor : sign .  (26)
+
+	.  reduce 26
+
+
+state 39
+	statement : ID ASSIGN . expression  (12)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 60
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 40
+	program : INT DIMENSIONS OF config END opt_statements EOF .  (1)
+
+	.  reduce 1
+
+
+state 41
+	statement_list : statement_list statement .  (10)
+
+	.  reduce 10
+
+
+state 42
+	statement : cell ASSIGN . expression  (11)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 61
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 43
+	field : ID OF INT DOT_DOT INT .  (6)
+
+	.  reduce 6
+
+
+state 44
+	cell : LBRACKET INT COMMA . INT RBRACKET  (14)
+
+	INT  shift 62
+	.  error
+
+
+state 45
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	factor : LPARENT expression . RPARENT  (25)
+
+	RPARENT  shift 63
+	PLUS  shift 48
+	MINUS  shift 49
+	.  error
+
+
+state 46
+	sign : PLUS factor .  (27)
+
+	.  reduce 27
+
+
+state 47
+	sign : MINUS factor .  (28)
+
+	.  reduce 28
+
+
+state 48
+	expression : expression PLUS . term  (15)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	term  goto 64
+	factor  goto 37
+	sign  goto 38
+
+
+state 49
+	expression : expression MINUS . term  (16)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	term  goto 65
+	factor  goto 37
+	sign  goto 38
+
+
+state 50
+	cond : expression EQ . expression  (29)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 66
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 51
+	cond : expression NEQ . expression  (30)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 67
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 52
+	cond : expression LT . expression  (31)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 68
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 53
+	cond : expression LEQ . expression  (32)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 69
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 54
+	cond : expression GT . expression  (33)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 70
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 55
+	cond : expression GEQ . expression  (34)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 71
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 56
+	statement : IF cond THEN . statement_list elsif_list END  (13)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ID  shift 20
+	.  error
+
+	statement_list  goto 72
+	statement  goto 23
+	cell  goto 24
+
+
+state 57
+	term : term DIVISION . factor  (19)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	factor  goto 73
+	sign  goto 38
+
+
+state 58
+	term : term MODULO . factor  (20)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	factor  goto 74
+	sign  goto 38
+
+
+state 59
+	term : term MULT . factor  (18)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	factor  goto 75
+	sign  goto 38
+
+
+state 60
+	statement : ID ASSIGN expression .  (12)
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	EOF  reduce 12
+	END  reduce 12
+	LBRACKET  reduce 12
+	IF  reduce 12
+	ELSE  reduce 12
+	ELSIF  reduce 12
+	ID  reduce 12
+
+
+state 61
+	statement : cell ASSIGN expression .  (11)
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	EOF  reduce 11
+	END  reduce 11
+	LBRACKET  reduce 11
+	IF  reduce 11
+	ELSE  reduce 11
+	ELSIF  reduce 11
+	ID  reduce 11
+
+
+state 62
+	cell : LBRACKET INT COMMA INT . RBRACKET  (14)
+
+	RBRACKET  shift 76
+	.  error
+
+
+state 63
+	factor : LPARENT expression RPARENT .  (25)
+
+	.  reduce 25
+
+
+state 64
+	expression : expression PLUS term .  (15)
+	term : term . MULT factor  (18)
+	term : term . DIVISION factor  (19)
+	term : term . MODULO factor  (20)
+
+	DIVISION  shift 57
+	MODULO  shift 58
+	MULT  shift 59
+	EOF  reduce 15
+	END  reduce 15
+	LBRACKET  reduce 15
+	RPARENT  reduce 15
+	PLUS  reduce 15
+	MINUS  reduce 15
+	IF  reduce 15
+	THEN  reduce 15
+	ELSE  reduce 15
+	ELSIF  reduce 15
+	EQ  reduce 15
+	NEQ  reduce 15
+	LT  reduce 15
+	LEQ  reduce 15
+	GT  reduce 15
+	GEQ  reduce 15
+	ID  reduce 15
+
+
+state 65
+	expression : expression MINUS term .  (16)
+	term : term . MULT factor  (18)
+	term : term . DIVISION factor  (19)
+	term : term . MODULO factor  (20)
+
+	DIVISION  shift 57
+	MODULO  shift 58
+	MULT  shift 59
+	EOF  reduce 16
+	END  reduce 16
+	LBRACKET  reduce 16
+	RPARENT  reduce 16
+	PLUS  reduce 16
+	MINUS  reduce 16
+	IF  reduce 16
+	THEN  reduce 16
+	ELSE  reduce 16
+	ELSIF  reduce 16
+	EQ  reduce 16
+	NEQ  reduce 16
+	LT  reduce 16
+	LEQ  reduce 16
+	GT  reduce 16
+	GEQ  reduce 16
+	ID  reduce 16
+
+
+state 66
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression EQ expression .  (29)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	THEN  reduce 29
+
+
+state 67
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression NEQ expression .  (30)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	THEN  reduce 30
+
+
+state 68
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression LT expression .  (31)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	THEN  reduce 31
+
+
+state 69
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression LEQ expression .  (32)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	THEN  reduce 32
+
+
+state 70
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression GT expression .  (33)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	THEN  reduce 33
+
+
+state 71
+	expression : expression . PLUS term  (15)
+	expression : expression . MINUS term  (16)
+	cond : expression GEQ expression .  (34)
+
+	PLUS  shift 48
+	MINUS  shift 49
+	THEN  reduce 34
+
+
+state 72
+	statement_list : statement_list . statement  (10)
+	statement : IF cond THEN statement_list . elsif_list END  (13)
+	elsif_list : .  (37)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ELSE  shift 77
+	ELSIF  shift 78
+	ID  shift 20
+	END  reduce 37
+
+	statement  goto 41
+	cell  goto 24
+	elsif_list  goto 79
+
+
+state 73
+	term : term DIVISION factor .  (19)
+
+	.  reduce 19
+
+
+state 74
+	term : term MODULO factor .  (20)
+
+	.  reduce 20
+
+
+state 75
+	term : term MULT factor .  (18)
+
+	.  reduce 18
+
+
+state 76
+	cell : LBRACKET INT COMMA INT RBRACKET .  (14)
+
+	.  reduce 14
+
+
+state 77
+	elsif_list : ELSE . statement_list  (36)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ID  shift 20
+	.  error
+
+	statement_list  goto 80
+	statement  goto 23
+	cell  goto 24
+
+
+state 78
+	elsif_list : ELSIF . cond THEN statement_list elsif_list  (35)
+
+	LBRACKET  shift 18
+	LPARENT  shift 28
+	PLUS  shift 29
+	MINUS  shift 30
+	ID  shift 31
+	INT  shift 32
+	.  error
+
+	cell  goto 33
+	expression  goto 34
+	cond  goto 81
+	term  goto 36
+	factor  goto 37
+	sign  goto 38
+
+
+state 79
+	statement : IF cond THEN statement_list elsif_list . END  (13)
+
+	END  shift 82
+	.  error
+
+
+state 80
+	statement_list : statement_list . statement  (10)
+	elsif_list : ELSE statement_list .  (36)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ID  shift 20
+	END  reduce 36
+
+	statement  goto 41
+	cell  goto 24
+
+
+state 81
+	elsif_list : ELSIF cond . THEN statement_list elsif_list  (35)
+
+	THEN  shift 83
+	.  error
+
+
+state 82
+	statement : IF cond THEN statement_list elsif_list END .  (13)
+
+	.  reduce 13
+
+
+state 83
+	elsif_list : ELSIF cond THEN . statement_list elsif_list  (35)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ID  shift 20
+	.  error
+
+	statement_list  goto 84
+	statement  goto 23
+	cell  goto 24
+
+
+state 84
+	statement_list : statement_list . statement  (10)
+	elsif_list : ELSIF cond THEN statement_list . elsif_list  (35)
+	elsif_list : .  (37)
+
+	LBRACKET  shift 18
+	IF  shift 19
+	ELSE  shift 77
+	ELSIF  shift 78
+	ID  shift 20
+	END  reduce 37
+
+	statement  goto 41
+	cell  goto 24
+	elsif_list  goto 85
+
+
+state 85
+	elsif_list : ELSIF cond THEN statement_list elsif_list .  (35)
+
+	.  reduce 35
+
+
+32 terminals, 16 nonterminals
+39 grammar rules, 86 states
