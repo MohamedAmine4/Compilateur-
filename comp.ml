@@ -132,6 +132,7 @@ let rec comp_stmt s =
 		q @ [
 			INVOKE (cSET, v, f)
 		]
+
   | SET_VAR(x,e)->
     let (v,q)=comp_expr e in 
     q @ [ SET(x,v) ]
@@ -140,7 +141,7 @@ let rec comp_stmt s =
     let l_then = new_lab() in
     let l_else = new_lab() in
     let l_end = new_lab() in
-    
+
     let cond_quads = comp_cond c l_then l_else in
     let then_quads = comp_stmt s1 in
     let else_quads = comp_stmt s2 in
@@ -151,11 +152,24 @@ let rec comp_stmt s =
     [LABEL l_else] @
     else_quads @
     [LABEL l_end] 
-    
-  | FOR(f,x,s)-> 
 
-	| _ ->
-		failwith "bad instruction"
+  | FOR(f, x, s) -> 
+      let neighbors = match f with
+        | MOORE -> 8
+        | VONNEUMANN -> 4
+        in
+      let neighbor_count = new_reg() in
+      [
+        SETI(neighbor_count, neighbors);
+        SETI(x, 0);
+      ] @
+      (comp_stmt s) @
+      [
+        ADD(x, x, one);
+        GOTO_LT(new_lab(), x, neighbor_count);
+      ]
+	| _ -> 
+    failwith "bad instruction"
 
 (** Compile the given application.
 	@param flds		List of fields.

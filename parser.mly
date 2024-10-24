@@ -62,7 +62,7 @@ let rec make_when f ws =
 %token PLUS
 %token MINUS
 %token IF THEN ELSE ELSIF
-%token FOR
+%token FOR MOORE VONNEUMANN
 %token EQ NEQ LT LEQ GT GEQ
 
 /* values */
@@ -142,11 +142,11 @@ statement:
     IF_THEN($2,$4,$5);
   
   }
-| FOR for_t ID statement_list END 
-  {
-    FOR($2,get_var $3 ,$4)
-  }
-;
+/*/ | FOR for_t ID statement_list   */
+/*/   { */
+/*/     FOR($2,get_var $3 ,$4) */
+/*/   } */
+/* ; */
 
 cell:
 	LBRACKET INT COMMA INT RBRACKET
@@ -228,4 +228,11 @@ elsif_list:
     { $2 }
   | /* empty */
     { NOP }
+;
+
+for_t:
+  MOORE
+    { MOORE }
+  | VONNEUMANN
+    { VONNEUMANN }
 ;

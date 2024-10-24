@@ -56,6 +56,8 @@ rule token = parse
 | "elsif"   { ELSIF }
 | "else"    { ELSE }
 | "for"         { FOR }
+| "moore"   { MOORE }
+| "vonneumann" { VONNEUMANN }
 | "="         { EQ }
 | "!="        { NEQ }
 | "<"         { LT }
