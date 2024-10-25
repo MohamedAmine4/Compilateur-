@@ -1,66 +1,64 @@
-@ Type exercise 5 here
-
-SETI R0, #0
-SETI R1, #0
-SETI R2, #1
+@ Type exercise 4 here
+SETI R2, #0
+SETI R3, #0
+SETI R4, #1
+SETI R5, #0
+SETI R6, #0
 SETI R7, #0
+SETI R8, #0
 
 
-invoke 1,3,4
+INVOKE 1, 0, 1
+SET R2, R0
+SET R3, R1
 
+SUB R2, R2, R4
+SUB R3, R3, R4
 
+LOOP1:
+	GOTO_GT EXIT, R5, R2
+	SETI R6, #0
+ 	LOOP2:
+		GOTO_GT INNER, R6, R3
+        SETI R9, #0
+		SETI R7, #0
+		INVOKE 3, 5, 6
+		INVOKE 5, 7, 0
+        
+		GOTO_NE RULE_2, R7, R4
 
-L2: @boucle principale
-GOTO L6
-invoke 3,1,0
-ADD R1,R1,R2
-GOTO_EQ L3,R1,R3
-GOTO L2
+		RULE_1:
+			INVOKE 4, 8, 0
+            GOTO NOT_SET_1
+        
+        RULE_2:
+            INVOKE 5, 7, 1
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 2
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 3
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 4
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 5
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 6
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 7
+            GOTO_EQ RULE_3, R7, R4
+            INVOKE 5, 7, 8
+            GOTO_EQ RULE_3, R7, R4
+            GOTO NOT_SET_1
+        
+        RULE_3:
+            INVOKE 4, 4, 0
+            GOTO NOT_SET_1
 
-L6: @ boucle sur les voisins  et sur la grille meme 
-invoke 5,6,0
-GOTO_EQ L9,R6,R2
-invoke 5,6,7
-GOTO_EQ L1,R6,R2
-invoke 5,6,6
-GOTO_EQ L1,R6,R2
-invoke 5,6,5
-GOTO_EQ L1,R6,R2
-invoke 5,6,4
-GOTO_EQ L1,R6,R2
-invoke 5,6,3
-GOTO_EQ L1,R6,R2
-invoke 5,6,2
-GOTO_EQ L1,R6,R2
-invoke 5,6,1
-GOTO_EQ L1,R6,R2
-invoke 5,6,8
-GOTO_EQ L1,R6,R2
-invoke 3,1,0
-ADD R1,R1,R2
-GOTO_EQ L3,R1,R3
-GOTO L2
-
-L9:    @boucle pour changer la grille actuel on 0 s'il egale a  1 
-invoke 4,7,0 
-invoke 3,1,0
-ADD R1,R1,R2
-GOTO L2 
-
-L1 :    @boucle pour changer la coulour ses les voisines sont egale 1
-invoke 4,2,0 
-invoke 3,1,0
-ADD R1,R1,R2
-GOTO L2       
-
-
-
-L3:   @boucle pour parcourir les colones 
-SETI R1, #0
-ADD R0,R0,R2
-GOTO_EQ L4 ,R0,R3
-GOTO L2
-
-L4:
+		NOT_SET_1:
+			ADD R6, R6, R4
+			GOTO LOOP2
+	INNER:
+		ADD R5, R5, R4
+		GOTO LOOP1
+EXIT:
 	STOP
-  

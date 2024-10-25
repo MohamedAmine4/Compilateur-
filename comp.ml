@@ -166,7 +166,7 @@ let rec comp_stmt s =
     else_quads @
     [LABEL l_end] 
 	| _ -> 
-    failwith "bad instruction"
+    failwith "bad instruction "
 
 (** Compile the given application.
 	@param flds		List of fields.
