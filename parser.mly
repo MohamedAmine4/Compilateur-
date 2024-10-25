@@ -49,7 +49,7 @@ let rec make_when f ws =
 
 /* symbols */
 
- 
+
 %token ASSIGN
 %token COMMA
 %token LBRACKET RBRACKET
@@ -62,7 +62,7 @@ let rec make_when f ws =
 %token PLUS
 %token MINUS
 %token IF THEN ELSE ELSIF
-%token FOR MOORE VONNEUMANN
+%token NOT AND OR
 %token EQ NEQ LT LEQ GT GEQ
 
 /* values */
@@ -142,11 +142,6 @@ statement:
     IF_THEN($2,$4,$5);
   
   }
-/*/ | FOR for_t ID statement_list   */
-/*/   { */
-/*/     FOR($2,get_var $3 ,$4) */
-/*/   } */
-/* ; */
 
 cell:
 	LBRACKET INT COMMA INT RBRACKET
@@ -212,27 +207,42 @@ sign:
   /*  { printf "NEG\n"; $2 }*/
   ;
 
-cond:
-  expression EQ expression  { COMP(COMP_EQ, $1, $3) }
-| expression NEQ expression { COMP(COMP_NE, $1, $3) }
-| expression LT expression  { COMP(COMP_LT, $1, $3) }
-| expression LEQ expression { COMP(COMP_LE, $1, $3) }
-| expression GT expression  { COMP(COMP_GT, $1, $3) }
-| expression GEQ expression { COMP(COMP_GE, $1, $3) }
-
-
 elsif_list:
-  | ELSIF cond THEN statement_list elsif_list
-    { IF_THEN($2, $4, $5) }
+    ELSIF cond THEN statement_list elsif_list
+      { IF_THEN($2, $4, $5) }
   | ELSE statement_list
     { $2 }
   | /* empty */
     { NOP }
 ;
 
-for_t:
-  MOORE
-    { MOORE }
-  | VONNEUMANN
-    { VONNEUMANN }
+cond:
+    condion_OR { $1 }
 ;
+
+condion_OR:
+    condion_OR OR condition_AND { OR($1, $3) }
+  | condition_AND             { $1 }
+;
+
+condition_AND:
+    condition_AND AND condition_NOT { AND ($1, $3) }
+  | condition_NOT              { $1 }
+;
+
+condition_NOT:
+    NOT condition_NOT { NOT($2) }
+  | simple_condition  { $1 }
+  | LPARENT cond RPARENT { $2 }
+;
+
+simple_condition:
+    expression EQ expression  { COMP(COMP_EQ, $1, $3) }
+  | expression NEQ expression { COMP(COMP_NE, $1, $3) }
+  | expression LT expression  { COMP(COMP_LT, $1, $3) }
+  | expression LEQ expression { COMP(COMP_LE, $1, $3) }
+  | expression GT expression  { COMP(COMP_GT, $1, $3) }
+  | expression GEQ expression { COMP(COMP_GE, $1, $3) }
+;
+
+

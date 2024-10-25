@@ -51,13 +51,13 @@ rule token = parse
 | '*'       {MULT }
 | '+'       { PLUS } 
 | '-'       { MINUS }
+| "!"      { NOT }
+| "&"    { AND }
+| "|"     { OR }
 | "if"        { IF }
 | "then"      { THEN }
 | "elsif"   { ELSIF }
 | "else"    { ELSE }
-| "for"         { FOR }
-| "moore"   { MOORE }
-| "vonneumann" { VONNEUMANN }
 | "="         { EQ }
 | "!="        { NEQ }
 | "<"         { LT }

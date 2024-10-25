@@ -102,6 +102,19 @@ let rec comp_expr e =
 let rec comp_cond c l_then l_else =
 
 	match c with
+  | AND (e1, e2) ->
+    let l_medium = new_lab() in
+    let q1 = comp_cond e1 l_medium l_else in
+    let q2 = comp_cond e2 l_medium l_else in
+    q1 @ [LABEL l_medium] @ q2
+  | OR (e1, e2) ->
+      let l_medium = new_lab() in
+      let q1 = comp_cond e1 l_then l_medium in
+      let q2 = comp_cond e2 l_then l_else in
+      q1 @ [LABEL l_medium] @ q2
+  | NOT e ->
+    comp_cond e l_else l_then
+
   | COMP (op, e1, e2) ->
       let (r1, q1) = comp_expr e1 in
       let (r2, q2) = comp_expr e2 in
@@ -152,22 +165,6 @@ let rec comp_stmt s =
     [LABEL l_else] @
     else_quads @
     [LABEL l_end] 
-
-  | FOR(f, x, s) -> 
-      let neighbors = match f with
-        | MOORE -> 8
-        | VONNEUMANN -> 4
-        in
-      let neighbor_count = new_reg() in
-      [
-        SETI(neighbor_count, neighbors);
-        SETI(x, 0);
-      ] @
-      (comp_stmt s) @
-      [
-        ADD(x, x, one);
-        GOTO_LT(new_lab(), x, neighbor_count);
-      ]
 	| _ -> 
     failwith "bad instruction"
 

@@ -1,0 +1,8 @@
+2 dimensions of 0..1 end
+
+if [0, 0] = 0 & [0, 1] = 1 then
+	[0, 0] := 1
+end
+if [0, 0] = 1 & [0, 1] = 0 then
+	[0, 0] := 0
+end
